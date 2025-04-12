@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Log Inventory Use</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: auto;
+    }
+    label, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+  <script>
+    function getPartFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const part = params.get("part") || "";
+      document.getElementById("part").value = part;
+    }
+    window.onload = getPartFromURL;
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Inventory Part Log</h2>
+    <form action="https://script.google.com/macros/s/AKfycbyPHoIQhzxHHU6bDOHRNh_5iU5AwSgPyHNB1zYugVDNIee6APLCynb-fvAL6Adm0Rha/exec" method="get">
+
+      <label for="tech">Technician Name:</label>
+      <input type="text" id="tech" name="tech" placeholder="Enter your name" required>
+
+      <label for="room">Room Number / Issue:</label>
+      <input type="text" id="room" name="room" placeholder="e.g. 1245 / Sink Leak" required>
+
+      <label for="qty">Quantity Taken:</label>
+      <input type="number" id="qty" name="qty" placeholder="e.g. 1" min="1" required>
+
+      <input type="hidden" id="part" name="part" value="">
+
+      <button type="submit">Log Part</button>
+    </form>
+  </div>
+</body>
+</html>
