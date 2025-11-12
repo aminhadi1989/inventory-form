@@ -148,20 +148,14 @@
           throw new Error('Please fill all required fields');
         }
         
-        // UPDATED APPS SCRIPT URL - Nov 11, 2025
-        const response = await fetch('https://script.google.com/macros/s/AKfycbxfIyJVwXBdlzozeWikq48P6zNYQU6CVyYqxfXtt-DjNBdhOzA4M4TB8wNGMYx9lOpl/exec', {
+        // UPDATED APPS SCRIPT URL - Deployment: Nov 11, 2025
+        const response = await fetch('https://script.google.com/macros/s/AKfycbx5Q1nrNXhuQ9PUxIVcD7hbTx7r586sdpzzuQpZBjfFf7LAYNk8oUmIMKbX61-XdIsacQ/exec', {
           method: 'POST',
           body: formData
         });
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        // Check if script returned error
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.message || 'Server error');
         }
         
         message.textContent = '✅ Part logged successfully!';
