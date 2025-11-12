@@ -19,7 +19,7 @@
       margin: auto;
     }
     h2 {
-      color: #003B71; /* Hyatt brand blue */
+      color: #003B71;
       margin-top: 0;
       text-align: center;
     }
@@ -101,8 +101,11 @@
       <label for="tech">Technician Name:</label>
       <input type="text" id="tech" name="tech" placeholder="Enter your name" required autocomplete="name">
 
-      <label for="room">Room Number / Issue:</label>
-      <input type="text" id="room" name="room" placeholder="e.g. 1245 / Sink Leak" required>
+      <label for="room">Room Number:</label>
+      <input type="text" id="room" name="room" placeholder="e.g. 1245" required>
+
+      <label for="issue">Issue / Description:</label>
+      <input type="text" id="issue" name="issue" placeholder="e.g. Sink Leak, AC Noisy, etc." required>
 
       <label for="qty">Quantity Taken:</label>
       <input type="number" id="qty" name="qty" placeholder="1" min="1" required>
@@ -115,16 +118,12 @@
   </div>
 
   <script>
-    // Sanitize and load part from URL
     function loadPartName() {
       try {
         const params = new URLSearchParams(window.location.search);
         const rawPart = params.get("part") || "";
-        // Sanitize: remove dangerous characters
         const sanitizedPart = rawPart.replace(/[<>\"'&]/g, "");
         document.getElementById("part").value = sanitizedPart;
-        
-        // Optional: show part name to tech for confirmation
         if (sanitizedPart) {
           document.querySelector('h2').textContent = `Log: ${sanitizedPart}`;
         }
@@ -133,28 +132,22 @@
       }
     }
 
-    // Handle form submission with fetch
     async function handleSubmit(e) {
       e.preventDefault();
-      
       const form = document.getElementById('logForm');
       const button = document.getElementById('submitBtn');
       const message = document.getElementById('message');
       
-      // Show loading state
       button.disabled = true;
       button.innerHTML = '<span class="loading"></span>Logging...';
       message.style.display = 'none';
       
       try {
         const formData = new FormData(form);
-        
-        // Double-check required fields
-        if (!formData.get('tech') || !formData.get('room') || !formData.get('qty')) {
+        if (!formData.get('tech') || !formData.get('room') || !formData.get('issue') || !formData.get('qty')) {
           throw new Error('Please fill all required fields');
         }
         
-        // POST to Apps Script - UPDATED URL
         const response = await fetch('https://script.google.com/macros/s/AKfycbxqWCId-p5YaWY4Te3y0QDyfOpdH8nhUK8RbX9G4t4d8oilZ_t2JU1CgXF3PsQZcZQ7/exec', {
           method: 'POST',
           body: formData
@@ -164,33 +157,27 @@
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Success feedback
         message.textContent = '✅ Part logged successfully!';
         message.className = 'message success';
         message.style.display = 'block';
         
-        // Reset form after 2 seconds
         setTimeout(() => {
           form.reset();
-          loadPartName(); // Reload part from URL
+          loadPartName();
           message.style.display = 'none';
         }, 2000);
         
       } catch (error) {
-        // Error feedback
         message.textContent = `❌ Error: ${error.message}. Try again.`;
         message.className = 'message error';
         message.style.display = 'block';
-        
         console.error('Submission error:', error);
       } finally {
-        // Restore button
         button.disabled = false;
         button.textContent = 'Log Part';
       }
     }
 
-    // Initialize
     window.onload = function() {
       loadPartName();
       document.getElementById('logForm').addEventListener('submit', handleSubmit);
